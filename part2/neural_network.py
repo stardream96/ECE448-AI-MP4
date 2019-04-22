@@ -27,14 +27,19 @@ def minibatch_gd(epoch, w1, w2, w3, w4, b1, b2, b3, b4, x_train, y_train, num_cl
     batch_size = 200
     losses = []         #a list of total loss at each epoch. Length = epoch
     for e in range(epoch):  #or (1, epoch + 1). not sure
-        print("new epoch")
-        
-        #One very common error is that you are probably shuffling your x_train 
-        #but not your y_train corresponding to the correct rows. Or you are not loading in batches properly.
+        print("epoch " + str(e + 1))
+
+        # One very common error is that you are probably shuffling your x_train
+        # but not your y_train corresponding to the correct rows. Or you are not loading in batches properly.
         # MODIFY SHUFFLE
         if shuffle == True:
-            np.random.shuffle(x_train)
+            # use advanced indexing to create unison-shuffled arrays
+            p = np.random.permutation(len(x_train))
+            x_train = x_train[p]
+            y_train = y_train[p]
+
         total_loss = 0
+
         #add "+1" in range function to pass unit test
         for i in range(1, int(len(x_train)/batch_size) + 1): #number of examples / batch size
             x = x_train[(i - 1) * batch_size  :  i * batch_size]    # split x & y into smaller batches
