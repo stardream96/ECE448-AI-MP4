@@ -24,7 +24,19 @@ import numpy as np
 def minibatch_gd(epoch, w1, w2, w3, w4, b1, b2, b3, b4, x_train, y_train, num_classes, shuffle=True):
 
     #IMPLEMENT HERE
-
+    batch_size = 200
+    losses = []         #a list of total loss at each epoch. Length = epoch
+    for e in range(1, epoch):
+        if shuffle == True:
+            np.random.shuffle(x_train)
+        total_loss = 0
+        for i in range(1, int(len(x_train)/batch_size)): #number of examples / batch size
+            x = x_train     #not sure
+            y = y_train
+            loss, w1, w2, w3, w4 = four_nn(w1, w2, w3, w4, b1, b2, b3, b4, x, y, num_classes)
+            total_loss += loss
+        losses.append(total_loss)
+        
     return w1, w2, w3, w4, b1, b2, b3, b4, losses
 
 """
