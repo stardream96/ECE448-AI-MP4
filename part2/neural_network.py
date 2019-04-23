@@ -70,10 +70,26 @@ def minibatch_gd(epoch, w1, w2, w3, w4, b1, b2, b3, b4, x_train, y_train, num_cl
 
 
 def test_nn(w1, w2, w3, w4, b1, b2, b3, b4, x_test, y_test, num_classes):
-    classfication = four_nn(w1, w2, w3, w4, b1, b2, b3, b4, x_test, y_test, num_classes, test = True)
-    print(classfication)
-    avg_class_rate = 0.0
+    classifications = four_nn(w1, w2, w3, w4, b1, b2, b3, b4, x_test, y_test, num_classes, test = True)
+    print("test_nn")
+    print(len(classifications))
+    print(len(y_test))
+    print(classifications)
+    print(y_test)
+    count = [0.0] * num_classes
     class_rate_per_class = [0.0] * num_classes
+    avg_class_rate = 0.0
+    for i in range(len(y_test)):
+        correct_label = y_test[i]
+        count[correct_label] += 1
+        if correct_label == classifications[i]:
+            class_rate_per_class[correct_label] += 1
+            avg_class_rate += 1.0
+    total = 0
+    for i in range(num_classes):
+        total += count[i]
+        class_rate_per_class[i] /= count[i]
+    avg_class_rate /= total
     return avg_class_rate, class_rate_per_class
 
 
@@ -98,10 +114,11 @@ def four_nn(W1, W2, W3, W4, b1, b2, b3, b4, X, Y, num_classes, test):
     #print("four_nn halfway done")
 
     if (test == True):
-        classifications = np.zeros(F.shape[0])
-        for i in range(F.shape[0]):
-            classifications[i] = max(F[i])
-        return classifications
+        classfications = [np.argmax(x) for x in F]
+        # classifications = np.zeros(F.shape[0])
+        # for i in range(F.shape[0]):
+        #     classifications[i] = np.argmax(F[i])
+        return classfications
 
     loss, dF = cross_entropy(F,Y)
     dA3, dW4, db4 = affine_backward(dF,acache4)
@@ -199,5 +216,3 @@ def cross_entropy(F, y):
         loss += (-1 / n) * (l1[i] - np.log(l2[i]))
 
     return loss, dF
-
-
